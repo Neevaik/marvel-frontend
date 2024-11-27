@@ -1,45 +1,45 @@
-import axios from "axios";
-import { useState, useEffect } from "react";
 import "../styles/Home.css";
+import { useState, useEffect } from "react";
+
+import CharacterCard from "../components/CharacterCard";
+import Pagination from "../components/Pagination";
+import SearchBar from "../components/SearchBar";
+
+import { fetchData, filterData, paginateData } from "../utils";
 
 function Home() {
     const [data, setData] = useState([]);
+    const [filteredData, setFilteredData] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [currentPage, setCurrentPage] = useState(1);
-    const itemsPerPage = 15; // Nombre de cartes par page
-
-    const fetchData = async () => {
-        try {
-            const response = await axios.get("http://localhost:3000/characters/all");
-            setData(response.data.data.results); // Accéder directement au tableau des personnages
-            setIsLoading(false);
-        } catch (error) {
-            console.log(error.message);
-        }
-    };
+    const [searchTerm, setSearchTerm] = useState("");
+    const [favorites, setFavorites] = useState({});
+    const itemsPerPage = 10;
 
     useEffect(() => {
-        fetchData();
+        fetchData(setData, setIsLoading);
     }, []);
 
-    // Calcul des index pour la pagination
-    const indexOfLastItem = currentPage * itemsPerPage;
-    const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-    const currentItems = data.slice(indexOfFirstItem, indexOfLastItem);
+    useEffect(() => {
+        setFilteredData(filterData(data, searchTerm));
+        setCurrentPage(1);
+    }, [searchTerm, data]);
 
-    // Nombre total de pages
-    const totalPages = Math.ceil(data.length / itemsPerPage);
+    const currentItems = paginateData(filteredData, currentPage, itemsPerPage);
+    const totalPages = Math.ceil(filteredData.length / itemsPerPage);
 
-    const handleNextPage = () => {
-        if (currentPage < totalPages) {
-            setCurrentPage(currentPage + 1);
+    const handlePageChange = (direction) => {
+        const newPage = currentPage + direction;
+        if (newPage >= 1 && newPage <= totalPages) {
+            setCurrentPage(newPage);
         }
     };
 
-    const handlePreviousPage = () => {
-        if (currentPage > 1) {
-            setCurrentPage(currentPage - 1);
-        }
+    const handleFavoriteToggle = (id) => {
+        setFavorites((prevFavorites) => ({
+            ...prevFavorites,
+            [id]: !prevFavorites[id],
+        }));
     };
 
     if (isLoading) {
@@ -48,45 +48,22 @@ function Home() {
 
     return (
         <div>
+            <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
             <div className="cards-container">
                 {currentItems.map((character) => (
-                    <div
+                    <CharacterCard
                         key={character._id}
-                        className="card"
-                        style={{
-                            backgroundImage: `url(${character.thumbnail.path}.${character.thumbnail.extension})`,
-                        }}
-                    >
-                        <div className="card-content">
-                            <h2 className="card-title">{character.name}</h2>
-                            <p className="card-description">
-                                {character.description || "No description available"}
-                            </p>
-                        </div>
-                    </div>
+                        character={character}
+                        handleFavoriteToggle={handleFavoriteToggle}
+                        isFavorite={favorites[character._id]}
+                    />
                 ))}
             </div>
-
-            {/* Navigation pour la pagination */}
-            <div className="pagination">
-                <button
-                    onClick={handlePreviousPage}
-                    disabled={currentPage === 1}
-                    className="pagination-button"
-                >
-                    Previous
-                </button>
-                <span className="pagination-info">
-                    Page {currentPage} of {totalPages}
-                </span>
-                <button
-                    onClick={handleNextPage}
-                    disabled={currentPage === totalPages}
-                    className="pagination-button"
-                >
-                    Next
-                </button>
-            </div>
+            <Pagination
+                currentPage={currentPage}
+                totalPages={totalPages}
+                handlePageChange={handlePageChange}
+            />
         </div>
     );
 }
