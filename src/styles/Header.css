@@ -1,0 +1,17 @@
+.header-logo{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #202020;
+}
+
+.Logo{
+    display: flex;
+    height: 180px;
+}
+
+.header-tabs{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
