@@ -3,17 +3,14 @@ import "../styles/Home.css"
 
 function CharacterCard({ character, handleFavoriteToggle, isFavorite }) {
     return (
-        <div
-            className="card"
+        <div className="card"
             style={{
                 backgroundImage: `url(${character.thumbnail.path}.${character.thumbnail.extension})`,
-            }}
-        >
+            }}>
             <div className="card-content">
                 <div
                     className="favorite-icon"
-                    onClick={() => handleFavoriteToggle(character._id)}
-                >
+                    onClick={() => handleFavoriteToggle(character._id)}>
                     {isFavorite ? (
                         <FaStar className="favorite-star" />
                     ) : (

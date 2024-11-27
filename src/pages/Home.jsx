@@ -16,13 +16,16 @@ function Home() {
     const [favorites, setFavorites] = useState({});
     const itemsPerPage = 10;
 
-    useEffect(() => {
-        fetchData(setData, setIsLoading);
-    }, []);
+    const route = "/characters/all"
 
     useEffect(() => {
-        setFilteredData(filterData(data, searchTerm));
-        setCurrentPage(1);
+        const getDataAndFilter = async () => {
+            await fetchData(route, setData, setIsLoading);
+
+            setFilteredData(filterData(data, searchTerm));
+        };
+
+        getDataAndFilter();
     }, [searchTerm, data]);
 
     const currentItems = paginateData(filteredData, currentPage, itemsPerPage);

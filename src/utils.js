@@ -1,11 +1,11 @@
-// utils.js
-
 import axios from "axios";
 
-// Fonction pour récupérer les données
-export const fetchData = async (setData, setIsLoading) => {
+export const fetchData = async (route, setData, setIsLoading) => {
+    const baseUrl = "http://localhost:3000";
+    const url = `${baseUrl}${route}`;
+
     try {
-        const response = await axios.get("http://localhost:3000/characters/all");
+        const response = await axios.get(url);
         setData(response.data.data.results);
         setIsLoading(false);
     } catch (error) {
@@ -13,14 +13,12 @@ export const fetchData = async (setData, setIsLoading) => {
     }
 };
 
-// Fonction pour filtrer les données selon un terme de recherche
 export const filterData = (data, searchTerm) => {
     return data.filter((character) =>
         character.name.toLowerCase().includes(searchTerm.toLowerCase())
     );
 };
 
-// Fonction pour la pagination des données
 export const paginateData = (filteredData, currentPage, itemsPerPage) => {
     const indexOfLastItem = currentPage * itemsPerPage;
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
