@@ -1,9 +1,10 @@
-import "../styles/Home.css";
+import "../styles/Comics.css";
 import { useState, useEffect } from "react";
 
-import { fetchData, filterData, paginateData } from "../utils";
 import SearchBar from "../components/SearchBar";
 import Pagination from "../components/Pagination";
+
+import { fetchData, filterComicsData, paginateData } from "../utils";
 
 function Comics() {
     const [data, setData] = useState([]);
@@ -11,28 +12,18 @@ function Comics() {
     const [isLoading, setIsLoading] = useState(true);
     const [currentPage, setCurrentPage] = useState(1);
     const [searchTerm, setSearchTerm] = useState("");
-    const [isSorted, setIsSorted] = useState(false); // Indique si les données sont triées par ordre alphabétique
     const itemsPerPage = 10;
 
     const route = "/comics";
 
-    // Récupérer les données de l'API
     useEffect(() => {
-        const getData = async () => {
+        const getDataAndFilter = async () => {
             await fetchData(route, setData, setIsLoading);
+            setFilteredData(filterComicsData(data, searchTerm));
         };
-        getData();
-    }, []);
 
-    // Filtrer et trier les données en fonction du terme de recherche et du tri alphabétique
-    useEffect(() => {
-        let results = filterData(data, searchTerm);
-        if (isSorted) {
-            results = results.sort((a, b) => a.title.localeCompare(b.title));
-        }
-        setFilteredData(results);
-        setCurrentPage(1); // Réinitialiser à la première page après un tri ou une recherche
-    }, [searchTerm, data, isSorted]);
+        getDataAndFilter();
+    }, [searchTerm, data]);
 
     const currentItems = paginateData(filteredData, currentPage, itemsPerPage);
     const totalPages = Math.ceil(filteredData.length / itemsPerPage);
@@ -44,10 +35,6 @@ function Comics() {
         }
     };
 
-    const toggleSortOrder = () => {
-        setIsSorted((prev) => !prev);
-    };
-
     if (isLoading) {
         return <p>Loading...</p>;
     }
@@ -55,9 +42,6 @@ function Comics() {
     return (
         <div>
             <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
-            <button className="sort-button" onClick={toggleSortOrder}>
-                {isSorted ? "Unsort" : "Sort Alphabetically"}
-            </button>
             <div className="cards-container">
                 {currentItems.map((comic) => (
                     <div key={comic._id} className="comic-card">

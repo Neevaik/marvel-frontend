@@ -11,7 +11,7 @@ function Header() {
                 </Link>
             </div>
             <div className="header-tabs">
-                <Link to="characterDetails">Personnages</Link>
+                <Link to="/">Personnages</Link>
                 <Link to="/comics">Comics</Link>
                 <Link>Favoris</Link>
             </div>

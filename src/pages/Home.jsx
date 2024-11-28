@@ -5,7 +5,7 @@ import CharacterCard from "../components/CharacterCard";
 import Pagination from "../components/Pagination";
 import SearchBar from "../components/SearchBar";
 
-import { fetchData, filterData, paginateData } from "../utils";
+import { fetchData, filterCharactersData, paginateData } from "../utils";
 
 function Home() {
     const [data, setData] = useState([]);
@@ -21,8 +21,7 @@ function Home() {
     useEffect(() => {
         const getDataAndFilter = async () => {
             await fetchData(route, setData, setIsLoading);
-
-            setFilteredData(filterData(data, searchTerm));
+            setFilteredData(filterCharactersData(data, searchTerm));
         };
 
         getDataAndFilter();
