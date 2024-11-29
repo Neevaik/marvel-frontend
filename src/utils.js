@@ -3,7 +3,6 @@ import axios from "axios";
 export const fetchData = async (route, setData, setIsLoading) => {
     const baseUrl = "http://localhost:3000";
     const url = `${baseUrl}${route}`;
-
     try {
         const response = await axios.get(url);
         setData(response.data.results);

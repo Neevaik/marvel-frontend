@@ -1,4 +1,4 @@
-import "../styles/Comics.css";
+import "../styles/Character-details.css";
 import { useState, useEffect } from "react";
 
 import SearchBar from "../components/SearchBar";

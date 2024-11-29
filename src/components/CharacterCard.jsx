@@ -1,12 +1,20 @@
 import { FaStar, FaRegStar } from "react-icons/fa";
-import "../styles/Home.css"
+import "../styles/Home.css";
+import { useNavigate } from "react-router-dom";
 
 function CharacterCard({ character, handleFavoriteToggle, isFavorite }) {
+    const navigate = useNavigate();
+
+    const handleCardClick = () => {
+        navigate(`/character-details/${character._id}`);
+    }
+
     return (
         <div className="card"
             style={{
                 backgroundImage: `url(${character.thumbnail.path}.${character.thumbnail.extension})`,
-            }}>
+            }}
+            onClick={handleCardClick}>
             <div className="card-content">
                 <div
                     className="favorite-icon"

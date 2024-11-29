@@ -1,5 +1,6 @@
 import "../styles/Home.css";
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 import CharacterCard from "../components/CharacterCard";
 import Pagination from "../components/Pagination";
@@ -16,7 +17,7 @@ function Home() {
     const [favorites, setFavorites] = useState({});
     const itemsPerPage = 10;
 
-    const route = "/characters/all"
+    const route = "/characters/all";
 
     useEffect(() => {
         const getDataAndFilter = async () => {
@@ -58,14 +59,13 @@ function Home() {
                         character={character}
                         handleFavoriteToggle={handleFavoriteToggle}
                         isFavorite={favorites[character._id]}
-                    />
+                         />
                 ))}
             </div>
             <Pagination
                 currentPage={currentPage}
                 totalPages={totalPages}
-                handlePageChange={handlePageChange}
-            />
+                handlePageChange={handlePageChange} />
         </div>
     );
 }
