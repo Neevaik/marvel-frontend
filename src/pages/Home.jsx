@@ -1,38 +1,32 @@
 import "../styles/Home.css";
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
 
 import CharacterCard from "../components/CharacterCard";
 import Pagination from "../components/Pagination";
 import SearchBar from "../components/SearchBar";
 
-import { fetchData, filterCharactersData, paginateData } from "../utils";
+import { fetchData } from "../utils";
 
 function Home() {
     const [data, setData] = useState([]);
-    const [filteredData, setFilteredData] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
     const [currentPage, setCurrentPage] = useState(1);
     const [searchTerm, setSearchTerm] = useState("");
     const [favorites, setFavorites] = useState({});
-    const itemsPerPage = 10;
 
     const route = "/characters/all";
+    
+    const totalPages = 15;
 
+    const getData = async () => {
+        await fetchData(route, setData, setIsLoading, searchTerm, currentPage);
+    };
+    
     useEffect(() => {
-        const getDataAndFilter = async () => {
-            await fetchData(route, setData, setIsLoading);
-            setFilteredData(filterCharactersData(data, searchTerm));
-        };
+        getData();
+    }, [currentPage, searchTerm]);
 
-        getDataAndFilter();
-    }, [searchTerm, data]);
-
-    const currentItems = paginateData(filteredData, currentPage, itemsPerPage);
-    const totalPages = Math.ceil(filteredData.length / itemsPerPage);
-
-    const handlePageChange = (direction) => {
-        const newPage = currentPage + direction;
+    const handlePageChange = (newPage) => {
         if (newPage >= 1 && newPage <= totalPages) {
             setCurrentPage(newPage);
         }
@@ -53,19 +47,20 @@ function Home() {
         <div>
             <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
             <div className="cards-container">
-                {currentItems.map((character) => (
+                {data.map((character) => (
                     <CharacterCard
                         key={character._id}
                         character={character}
                         handleFavoriteToggle={handleFavoriteToggle}
                         isFavorite={favorites[character._id]}
-                         />
+                    />
                 ))}
             </div>
             <Pagination
                 currentPage={currentPage}
                 totalPages={totalPages}
-                handlePageChange={handlePageChange} />
+                handlePageChange={handlePageChange}
+            />
         </div>
     );
 }

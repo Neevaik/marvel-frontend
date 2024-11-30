@@ -19,11 +19,6 @@ function CharacterDetails() {
         return <p>Loading...</p>
     }
 
-
-    if (!character) {
-        return <p>Error: Character data not available.</p>;
-    }
-
     
     const { thumbnail, name, description, comics } = character;
     const imageUrl = thumbnail
@@ -51,6 +46,7 @@ function CharacterDetails() {
                             <div className="comic-card" key={comic._id}>
                                 <img
                                     src={`${comic.thumbnail.path}.${comic.thumbnail.extension}`}
+                                    style={{height:50}}
                                     alt={comic.title}
                                     className="comic-thumbnail"
                                 />
