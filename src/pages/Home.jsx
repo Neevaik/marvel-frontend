@@ -14,13 +14,13 @@ function Home() {
     const [isLoading, setIsLoading] = useState(true);
     const [currentPage, setCurrentPage] = useState(1);
     const [searchTerm, setSearchTerm] = useState("");
-    const [favorites, setFavorites] = useState({});
+    const [favorites, setFavorites] = useState(null);
 
     const navigate = useNavigate();
     const route = "/characters/all";
     const totalPages = 15;
 
-    const params = { name: searchTerm, page: currentPage }
+    const params = { name: searchTerm, page: currentPage };
 
     const getData = async () => {
         await fetchData(route, setData, setIsLoading, params);
@@ -29,6 +29,32 @@ function Home() {
     useEffect(() => {
         getData();
     }, [currentPage, searchTerm]);
+
+    useEffect(() => {
+        try {
+            const savedFavorites = Cookies.get("favorites");
+            if (savedFavorites) {
+                setFavorites(JSON.parse(savedFavorites));
+                console.log("Favoris chargés depuis les cookies :", JSON.parse(savedFavorites));
+            } else {
+                setFavorites({});
+            }
+        } catch (error) {
+            console.error("Erreur lors du chargement des favoris :", error);
+            setFavorites({});
+        }
+    }, []);
+
+    useEffect(() => {
+        if (favorites !== null) {
+            try {
+                Cookies.set("favorites", JSON.stringify(favorites), { expires: 7 });
+                console.log("Favoris sauvegardés dans les cookies :", favorites);
+            } catch (error) {
+                console.error("Erreur lors de la sauvegarde des favoris :", error);
+            }
+        }
+    }, [favorites]);
 
     const handlePageChange = (newPage) => {
         if (newPage >= 1 && newPage <= totalPages) {
@@ -39,15 +65,15 @@ function Home() {
     const handleFavoriteToggle = (id) => {
         setFavorites((prevFavorites) => ({
             ...prevFavorites,
-            [id]: !prevFavorites[id],
+            [id]: !prevFavorites?.[id],
         }));
     };
 
     const handleCardClick = (id) => {
         navigate(`/character-details/${id}`);
-    }
+    };
 
-    if (isLoading) {
+    if (isLoading || favorites === null) {
         return <p>Loading...</p>;
     }
 
@@ -72,8 +98,8 @@ function Home() {
                 totalPages={totalPages}
                 handlePageChange={handlePageChange}
             />
-            
         </div>
     );
 }
+
 export default Home;

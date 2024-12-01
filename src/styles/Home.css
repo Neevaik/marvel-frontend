@@ -6,14 +6,13 @@
     z-index: 10;
 }
 
-.favorite-star {
+.favorite {
     font-size: 2rem;
-    color: gold;
 }
 
-.favorite-stars {
+.not-favorite {
     font-size: 2rem;
-    color: rgb(128, 128, 128);
+    color: rgb(243, 240, 71);
 }
 
 .cards-container {

@@ -18,9 +18,9 @@ function Card({ item, handleFavoriteToggle, isFavorite, onCardClick, titleKey = 
                     }}
                 >
                     {isFavorite ? (
-                        <FaStar className="favorite-star" />
+                        <FaStar className="not-favorite" />
                     ) : (
-                        <FaRegStar className="favorite-stars" />
+                        <FaRegStar className="favorite" />
                     )}
                 </div>
                 <h2 className="card-title">{item[titleKey]}</h2>
