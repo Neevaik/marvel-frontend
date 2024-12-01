@@ -1,4 +1,5 @@
 import "../styles/Home.css";
+import "../styles/Favorite.css";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
@@ -27,34 +28,15 @@ function Home() {
     };
 
     useEffect(() => {
-        getData();
-    }, [currentPage, searchTerm]);
-
-    useEffect(() => {
-        try {
-            const savedFavorites = Cookies.get("favorites");
-            if (savedFavorites) {
-                setFavorites(JSON.parse(savedFavorites));
-                console.log("Favoris chargés depuis les cookies :", JSON.parse(savedFavorites));
-            } else {
-                setFavorites({});
-            }
-        } catch (error) {
-            console.error("Erreur lors du chargement des favoris :", error);
-            setFavorites({});
+        const storedFavorites = Cookies.get("favorites");
+        if (storedFavorites) {
+            setFavorites(JSON.parse(storedFavorites));
         }
     }, []);
 
     useEffect(() => {
-        if (favorites !== null) {
-            try {
-                Cookies.set("favorites", JSON.stringify(favorites), { expires: 7 });
-                console.log("Favoris sauvegardés dans les cookies :", favorites);
-            } catch (error) {
-                console.error("Erreur lors de la sauvegarde des favoris :", error);
-            }
-        }
-    }, [favorites]);
+        getData();
+    }, [currentPage, searchTerm]);
 
     const handlePageChange = (newPage) => {
         if (newPage >= 1 && newPage <= totalPages) {
@@ -63,10 +45,12 @@ function Home() {
     };
 
     const handleFavoriteToggle = (id) => {
-        setFavorites((prevFavorites) => ({
-            ...prevFavorites,
-            [id]: !prevFavorites?.[id],
-        }));
+        const updatedFavorites = {
+            ...favorites,
+            [id]: !favorites[id],
+        };
+        setFavorites(updatedFavorites);
+        Cookies.set("favorites", JSON.stringify(updatedFavorites), { expires: 30 });
     };
 
     const handleCardClick = (id) => {

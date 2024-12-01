@@ -1,4 +1,4 @@
-import "../styles/Home.css";
+import "../styles/Card.css";
 import { FaStar, FaRegStar } from "react-icons/fa";
 
 function Card({ item, handleFavoriteToggle, isFavorite, onCardClick, titleKey = "name", descriptionKey = "description" }) {

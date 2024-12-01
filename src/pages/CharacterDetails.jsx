@@ -19,7 +19,6 @@ function CharacterDetails() {
         return <p>Loading...</p>
     }
 
-    
     const { thumbnail, name, description, comics } = character;
     const imageUrl = thumbnail
         ? `${thumbnail.path}.${thumbnail.extension}`

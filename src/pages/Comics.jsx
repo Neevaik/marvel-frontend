@@ -1,5 +1,6 @@
 import "../styles/Comics.css";
 import { useState, useEffect } from "react";
+import Cookies from "js-cookie";  // Import de js-cookie
 
 import SearchBar from "../components/SearchBar";
 import Pagination from "../components/Pagination";
@@ -14,17 +15,23 @@ function Comics() {
     const [searchTerm, setSearchTerm] = useState("");
     const [favorites, setFavorites] = useState({});
 
-
     const route = "/comics";
     const totalPages = 47;
-    const params = { title: searchTerm, page: currentPage }
+    const params = { title: searchTerm, page: currentPage };
+
+    useEffect(() => {
+        const storedFavorites = Cookies.get("favorites");
+        if (storedFavorites) {
+            setFavorites(JSON.parse(storedFavorites));
+        }
+    }, []);
 
     const getData = async () => {
         await fetchData(route, setData, setIsLoading, params);
     };
+
     useEffect(() => {
         getData();
-
     }, [currentPage, searchTerm]);
 
     const handlePageChange = (newPage) => {
@@ -34,10 +41,12 @@ function Comics() {
     };
 
     const handleFavoriteToggle = (id) => {
-        setFavorites((prevFavorites) => ({
-            ...prevFavorites,
-            [id]: !prevFavorites[id],
-        }));
+        const updatedFavorites = {
+            ...favorites,
+            [id]: !favorites[id],
+        };
+        setFavorites(updatedFavorites);
+        Cookies.set("favorites", JSON.stringify(updatedFavorites), { expires: 30 });
     };
 
     if (isLoading) {

@@ -1,4 +1,4 @@
-import "../styles/Home.css"
+import "../styles/SearchBar.css"
 
 function SearchBar({ searchTerm, setSearchTerm }) {
     return (
