@@ -18,12 +18,14 @@ function Home() {
 
     const totalPages = 15;
 
+    const params = { name: searchTerm, page: currentPage }
 
+    const getData = async () => {
+        await fetchData(route, setData, setIsLoading, params);
+    };
 
     useEffect(() => {
-
-        fetchData(route, setData, setIsLoading, searchTerm, currentPage);
-
+        getData();
     }, [currentPage, searchTerm]);
 
     const handlePageChange = (newPage) => {

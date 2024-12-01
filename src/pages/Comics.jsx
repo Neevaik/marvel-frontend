@@ -14,9 +14,13 @@ function Comics() {
 
     const route = "/comics";
     const totalPages = 47;
+    const params = { title: searchTerm, page: currentPage }
 
+    const getData = async () => {
+        await fetchData(route, setData, setIsLoading, params);
+    };
     useEffect(() => {
-        fetchData(route, setData, setIsLoading, searchTerm, currentPage);
+        getData();
 
     }, [currentPage, searchTerm]);
 
@@ -26,6 +30,7 @@ function Comics() {
         }
     };
 
+
     if (isLoading) {
         return <p>Loading...</p>;
     }
@@ -33,7 +38,6 @@ function Comics() {
     return (
         <div>
             <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
-
             <div className="cards-container">
                 {data.length > 0 ? (
                     data.map((comic) => (
