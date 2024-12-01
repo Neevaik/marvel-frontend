@@ -1,5 +1,7 @@
 import "../styles/Home.css";
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import Cookies from "js-cookie";
 
 import Card from "../components/Card";
 import Pagination from "../components/Pagination";
@@ -14,8 +16,8 @@ function Home() {
     const [searchTerm, setSearchTerm] = useState("");
     const [favorites, setFavorites] = useState({});
 
+    const navigate = useNavigate();
     const route = "/characters/all";
-
     const totalPages = 15;
 
     const params = { name: searchTerm, page: currentPage }
@@ -41,6 +43,10 @@ function Home() {
         }));
     };
 
+    const handleCardClick = (id) => {
+        navigate(`/character-details/${id}`);
+    }
+
     if (isLoading) {
         return <p>Loading...</p>;
     }
@@ -55,7 +61,7 @@ function Home() {
                         item={character}
                         handleFavoriteToggle={handleFavoriteToggle}
                         isFavorite={favorites[character._id]}
-                        onCardClick={() => console.log(`Character ${character._id} clicked!`)} // Remplaçable avec une navigation
+                        onCardClick={() => handleCardClick(character._id)}
                         titleKey="name"
                         descriptionKey="description"
                     />
@@ -66,8 +72,8 @@ function Home() {
                 totalPages={totalPages}
                 handlePageChange={handlePageChange}
             />
+            
         </div>
     );
 }
-
 export default Home;

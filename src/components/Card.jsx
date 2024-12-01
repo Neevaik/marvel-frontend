@@ -1,5 +1,4 @@
 import "../styles/Home.css";
-import { useNavigate } from "react-router-dom";
 import { FaStar, FaRegStar } from "react-icons/fa";
 
 function Card({ item, handleFavoriteToggle, isFavorite, onCardClick, titleKey = "name", descriptionKey = "description" }) {
