@@ -15,12 +15,9 @@ function Comics() {
     const route = "/comics";
     const totalPages = 47;
 
-    const getData = async () => {
-        await fetchData(route, setData, setIsLoading, searchTerm, currentPage);
-    };
-
     useEffect(() => {
-        getData();
+        fetchData(route, setData, setIsLoading, searchTerm, currentPage);
+
     }, [currentPage, searchTerm]);
 
     const handlePageChange = (newPage) => {
@@ -36,6 +33,7 @@ function Comics() {
     return (
         <div>
             <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
+
             <div className="cards-container">
                 {data.length > 0 ? (
                     data.map((comic) => (
@@ -58,6 +56,7 @@ function Comics() {
                     <p>No comics available</p>
                 )}
             </div>
+
             <Pagination
                 currentPage={currentPage}
                 totalPages={totalPages}

@@ -15,15 +15,15 @@ function Home() {
     const [favorites, setFavorites] = useState({});
 
     const route = "/characters/all";
-    
+
     const totalPages = 15;
 
-    const getData = async () => {
-        await fetchData(route, setData, setIsLoading, searchTerm, currentPage);
-    };
-    
+
+
     useEffect(() => {
-        getData();
+
+        fetchData(route, setData, setIsLoading, searchTerm, currentPage);
+
     }, [currentPage, searchTerm]);
 
     const handlePageChange = (newPage) => {
