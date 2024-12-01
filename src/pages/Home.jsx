@@ -1,7 +1,7 @@
 import "../styles/Home.css";
 import { useState, useEffect } from "react";
 
-import CharacterCard from "../components/CharacterCard";
+import Card from "../components/Card";
 import Pagination from "../components/Pagination";
 import SearchBar from "../components/SearchBar";
 
@@ -50,11 +50,14 @@ function Home() {
             <SearchBar searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
             <div className="cards-container">
                 {data.map((character) => (
-                    <CharacterCard
+                    <Card
                         key={character._id}
-                        character={character}
+                        item={character}
                         handleFavoriteToggle={handleFavoriteToggle}
                         isFavorite={favorites[character._id]}
+                        onCardClick={() => console.log(`Character ${character._id} clicked!`)} // Remplaçable avec une navigation
+                        titleKey="name"
+                        descriptionKey="description"
                     />
                 ))}
             </div>
